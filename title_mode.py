@@ -23,6 +23,7 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_SPACE:
             import play_mode
             game_framework.change_mode(play_mode)
+            break
 
 
 def update():
