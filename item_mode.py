@@ -23,15 +23,19 @@ def handle_events():
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.pop_mode()
+            break
         elif event.type == SDL_KEYDOWN and event.key == SDLK_1:
             play_mode.boy.selected_ball_size = 'small'
             game_framework.pop_mode()
+            break
         elif event.type == SDL_KEYDOWN and event.key == SDLK_2:
             play_mode.boy.selected_ball_size = 'large'
             game_framework.pop_mode()
+            break
         elif event.type == SDL_KEYDOWN and event.key == SDLK_0:
             game_world.remove_objects_of_type(Ball)
             game_framework.pop_mode()
+            break
 
 
 def update():
