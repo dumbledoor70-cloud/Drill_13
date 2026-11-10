@@ -9,6 +9,10 @@ def remove_object(o):
             layer.remove(o)
             return
 
+def remove_objects_of_type(object_type):
+    for layer in world:
+        layer[:] = [o for o in layer if not isinstance(o, object_type)]
+
 def update():
     for layer in world:
         for o in layer[:]:
