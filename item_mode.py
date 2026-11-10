@@ -24,6 +24,9 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_1:
             play_mode.boy.selected_ball_size = 'small'
             game_framework.pop_mode()
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_2:
+            play_mode.boy.selected_ball_size = 'large'
+            game_framework.pop_mode()
 
 
 def update():
