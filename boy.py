@@ -17,6 +17,7 @@ class Boy:
         self.idle_started_at = get_time()
         self.dir = 0
         self.face_dir = 1
+        self.selected_ball_size = 'small'
         self.pressed_keys = set()
 
         self.machine = Machine(
@@ -47,7 +48,8 @@ class Boy:
         self.frame = 0
 
     def fire_ball(self):
-        ball = Ball(self.x, self.y, self.face_dir * 10)
+        ball = Ball(self.x, self.y, self.face_dir * 10,
+                    self.selected_ball_size)
         game_world.add_oject(ball)
 
     def handle_event(self, event):
