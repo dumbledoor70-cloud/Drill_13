@@ -3,7 +3,6 @@ from math import pi
 from pico2d import get_canvas_width, get_time, load_image
 from sdl2 import (SDL_KEYDOWN, SDL_KEYUP, SDLK_LEFT, SDLK_RIGHT,
                   SDLK_SPACE)
-from transitions import Machine
 
 import game_world
 from ball import Ball
@@ -15,37 +14,17 @@ class Boy:
         self.frame = 0
         self.image = load_image('animation_sheet.png')
         self.idle_started_at = get_time()
+        self.state = 'IDLE'
         self.dir = 0
         self.face_dir = 1
         self.selected_ball_size = 'small'
         self.pressed_keys = set()
 
-        self.machine = Machine(
-            model=self,
-            states=['IDLE', 'SLEEP', 'RUN'],
-            transitions=[
-                {'trigger': 'fall_asleep',
-                 'source': 'IDLE', 'dest': 'SLEEP'},
-                {'trigger': 'wake_up',
-                 'source': 'SLEEP', 'dest': 'IDLE'},
-                {'trigger': 'start_run',
-                 'source': ['IDLE', 'SLEEP'], 'dest': 'RUN'},
-                {'trigger': 'stop_run',
-                 'source': 'RUN', 'dest': 'IDLE'},
-            ],
-            initial='IDLE',
-            auto_transitions=False,
-        )
-
-    def on_enter_IDLE(self):
-        self.idle_started_at = get_time()
+    def change_state(self, state):
+        self.state = state
         self.frame = 0
-
-    def on_enter_SLEEP(self):
-        self.frame = 0
-
-    def on_enter_RUN(self):
-        self.frame = 0
+        if state == 'IDLE':
+            self.idle_started_at = get_time()
 
     def fire_ball(self):
         ball = Ball(self.x, self.y, self.face_dir * 10,
@@ -56,7 +35,7 @@ class Boy:
         if (event.type == SDL_KEYDOWN and
                 event.key == SDLK_SPACE and
                 self.state == 'SLEEP'):
-            self.wake_up()
+            self.change_state('IDLE')
             return
 
         if (event.type == SDL_KEYDOWN and
@@ -81,15 +60,15 @@ class Boy:
             self.dir = direction
             self.face_dir = direction
             if self.state in ('IDLE', 'SLEEP'):
-                self.start_run()
+                self.change_state('RUN')
         elif self.state == 'RUN':
             self.dir = 0
-            self.stop_run()
+            self.change_state('IDLE')
 
     def update(self):
         if self.state == 'IDLE':
             if get_time() - self.idle_started_at >= 5.0:
-                self.fall_asleep()
+                self.change_state('SLEEP')
             else:
                 self.frame = (self.frame + 1) % 8
         elif self.state == 'RUN':
